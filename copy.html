@@ -1,0 +1,194 @@
+
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        #box{
+            height: 454px;
+            width: 730px;
+            margin: 100px auto;
+        }
+        #imglist{
+            list-style: none;
+            width: 700%;
+            position: relative;
+        }
+        #imglist li{
+            float: left;
+        }
+        #inner{
+            position: relative;
+            overflow: hidden;
+        }
+        .cirle{
+            height: 30px;
+            width: 360px;
+            position: absolute;
+            transform:translate(50%);
+            top:390px;
+            display:flex;
+            justify-content: space-around;
+            border-radius: 30px;
+        }
+        .cirle i{
+            height: 20px;
+            width: 20px;
+            background-color: white;
+            display: inline-block;
+            border-radius: 50%;
+            color: black;
+            text-align: center;
+            font: 12px/20px "consolas";
+            cursor: pointer;
+        }
+        .cirle .current{
+            opacity: 1;
+            z-index: 2;
+            background-color: cornflowerblue;
+        }
+        .arrow{
+            position: absolute;
+            height: 80px;
+            width: 730px;
+            display: flex;
+            cursor: pointer;
+            justify-content: space-between;
+            /*justify-items: center;*/
+            /*background-color: red;*/
+            /*transform: translate(50%);*/
+            top:180px;
+            display: none;
+
+
+        }
+        #inner{
+            position: relative;
+        }
+        .arrow div{
+            height: 80px;
+            width: 40px;
+            /*background-color: red;*/
+            font: 42px/80px "consolas";
+            background-color: skyblue;
+            opacity: 0.3;
+            text-align: center;
+            border-radius: 15px;
+        }
+
+    </style>
+</head>
+<body>
+<div id="box">
+    <div id="inner">
+        <div id='imglist'>
+            <li><img src="image/1.jpg" alt=""/></li>
+            <li><img src="image/2.jpg" alt=""/></li>
+            <li><img src="image/3.jpg" alt=""/></li>
+            <li><img src="image/4.jpg" alt=""/></li>
+            <li><img src="image/5.jpg" alt=""/></li>
+            <li><img src="image/6.jpg" alt=""/></li>
+            <li><img src="image/1.jpg" alt=""/></li>
+        </div>
+        <div class="cirle">
+            <i class="current">1</i><i>2</i><i>3</i><i>4</i><i>5</i><i>6</i>
+        </div>
+        <div class="arrow">
+                <div class="arrow-left">&lt;</div>
+                <div class="arrow-right">&gt;</div>
+        </div>
+    </div>
+</div>
+<script>
+//    获取元素
+    var box=document.getElementById("box");
+    var imglist=document.getElementById("imglist");
+    var inner=document.getElementById("inner")
+    var cirle=inner.children[1].children;
+    var arrow=inner.children[2];
+    var arrowLeft=arrow.children[0];
+    var arrowRight=arrow.children[1];
+    var pWidth=inner.offsetWidth
+//点击小圆点
+    for(var i=0;i<cirle.length;i++){
+        cirle[i].index=i
+        cirle[i].onmouseover=movecirle
+    }
+    function movecirle(){
+        target=this.index*pWidth*-1
+        animate(imglist,target);
+        for(var j=0;j<cirle.length;j++){
+            cirle[j].className=""
+        }
+
+        this.className="current"
+    }
+//封装函授
+      function animate(element,target){
+          clearInterval(element.timer)
+          element.timer=setInterval(function(){
+              var current=element.offsetLeft;
+//              console.log(current)
+//              var step=10;
+              var step=(target-current)/10
+              var step=step>0? Math.ceil(step):Math.floor(step);
+              current+=step;
+              element.style.left=current+"px"
+              if(current==target){
+                  clearInterval(element.timer);
+//                  element.style.left=target+"px"
+              }
+          },40)
+      }
+//    点击右边按钮
+    var current=0;
+    arrowRight.onclick=movearrow;
+    function movearrow(){
+        if(current==cirle.length){
+            current=0;
+            imglist.style.left=0+"px"
+        }
+        current++
+        var target=current*pWidth*-1;
+        animate(imglist,target)
+        for(var j=0;j<cirle.length;j++){
+            cirle[j].className=""
+        }
+        if(current==cirle.length){
+            cirle[0].className="current"
+        }else{
+            cirle[current].className="current"
+        }
+    };
+//    左边点击
+    arrowLeft.onclick=function(){
+        if(current==0){
+            current=cirle.length;
+            imglist.style.left=cirle.length*pWidth*-1+"px";
+        }
+        current--
+        for(var i=0 ; i< cirle.length ; i++){
+            cirle[i].className=""
+        }
+        cirle[current].className="current";
+        var target=current*pWidth*-1;
+        animate(imglist,target)
+    }
+    inner.onmouseover=function(){
+        arrow.style.display="flex";
+        clearInterval(timer)
+    }
+inner.onmouseout=function(){
+    arrow.style.display="none";
+    timer=setInterval(movearrow,3500)
+}
+    timer=setInterval(movearrow,3500)
+</script>
+
+</body>
+</html>
